@@ -6,7 +6,7 @@ Este é um **dashboard interativo** desenvolvido com **Streamlit** para visualiz
 ✅ **Filtrar pesquisas** por país, protocolo, idioma e ano
 ✅ **Visualizar detalhes completos** de cada pesquisa
 ✅ **Explorar estatísticas interativas** sobre protocolos utilizados
-✅ **Baixar os dados filtrados** em formato JSON
+✅ **Baixar os dados filtrados** em formato JCSV
 
 ## 🏗 Estrutura do Projeto
 ```
