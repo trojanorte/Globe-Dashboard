@@ -6,7 +6,7 @@ Este é um **dashboard interativo** desenvolvido com **Streamlit** para visualiz
 ✅ **Filtrar pesquisas** por país, protocolo, idioma e ano
 ✅ **Visualizar detalhes completos** de cada pesquisa
 ✅ **Explorar estatísticas interativas** sobre protocolos utilizados
-✅ **Baixar os dados filtrados** em formato JCSV
+✅ **Baixar os dados filtrados** em formato JCSV ou CSV
 
 ## 🏗 Estrutura do Projeto
 ```
@@ -38,9 +38,11 @@ As bibliotecas utilizadas no projeto são:
 - `streamlit`
 - `pandas`
 - `plotly`
+- `numpy`
+- `selenium` (para extração de dados)
 
 ## 📤 Exportação de Dados
-Os dados filtrados podem ser exportados em formato JSON para melhor eficiência e leveza.
+Os dados filtrados podem ser exportados diretamente pelo dashboard em JSON ou CSV para maior flexibilidade.
 
 ## 📜 Licença
 Este projeto está licenciado sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo!

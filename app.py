@@ -8,11 +8,11 @@ import utils
 st.set_page_config(page_title="GLOBE Research Dashboard", layout="wide")
 st.title("🌍 GLOBE Research Dashboard")
 
-# Caminho correto para o CSV
-DATA_FILE = "C:/Users/allys/OneDrive/Documentos/GitHub/Globe Dashboard/data/extracted_reports.csv"
+# Caminho correto para o JSON
+DATA_FILE = "C:/Users/allys/OneDrive/Documentos/GitHub/Globe Dashboard/data/extracted_reports.json"
 
-# Carregar os dados
-df = utils.load_csv(DATA_FILE)
+# Carregar os dados do JSON
+df = utils.load_json(DATA_FILE)
 
 # Filtros laterais
 selected_country, selected_protocol, selected_year = filters.sidebar_filters(df)
