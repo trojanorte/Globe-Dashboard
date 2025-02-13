@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 import streamlit as st
+from io import BytesIO  # Import necessário para manipulação do Excel
 
 # Caminho dinâmico para o JSON
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -29,19 +30,30 @@ def load_json():
     return df.fillna("Não informado")  # Substitui valores ausentes por "Não informado"
 
 def download_data(df):
-    """Adiciona botão para baixar os dados filtrados"""
-    if df.empty:
-        st.warning("Nenhum dado disponível para baixar.")
-        return
+    """Adiciona botões para baixar os dados filtrados em JSON, CSV e Excel"""
 
+    # **Download JSON**
     json_data = df.to_json(orient="records", force_ascii=False, indent=4).encode("utf-8")
     st.download_button(label="📥 Baixar dados filtrados (JSON)",
                        data=json_data,
                        file_name="globe_data_filtered.json",
                        mime="application/json")
 
+    # **Download CSV**
     csv_data = df.to_csv(index=False).encode("utf-8")
     st.download_button(label="📥 Baixar dados filtrados (CSV)",
                        data=csv_data,
                        file_name="globe_data_filtered.csv",
                        mime="text/csv")
+
+    # **Download Excel**
+    output = BytesIO()  # Criar buffer para armazenar o arquivo Excel
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False)
+    
+    output.seek(0)  # Retornar ao início do buffer
+
+    st.download_button(label="📥 Baixar dados filtrados (Excel)",
+                       data=output,
+                       file_name="globe_data_filtered.xlsx",
+                       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

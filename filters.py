@@ -1,49 +1,54 @@
 import streamlit as st
 import pandas as pd
+import json
+import os
+
+# Caminho dinâmico para o JSON
+BASE_DIR = os.path.dirname(__file__)
+DATA_FILE = os.path.join(BASE_DIR, "data", "extracted_reports.json")
+
+# Função para carregar o JSON corretamente
+def load_json():
+    """Carrega o arquivo JSON corretamente e converte para DataFrame"""
+    if not os.path.exists(DATA_FILE):
+        st.error(f"❌ Erro: Arquivo {DATA_FILE} não encontrado!")
+        return pd.DataFrame()  # Retorna um DataFrame vazio para evitar falhas
+
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Converter para DataFrame e garantir que todas as colunas existam
+    df = pd.DataFrame(data)
+
+    # Garantir que 'Country' e outros campos críticos não tenham valores ausentes
+    for col in ["Country", "Protocols", "Grade Level", "Report Type(s)", "Date Submitted"]:
+        df[col] = df.get(col, "Não informado").fillna("Não informado")
+
+    return df
 
 def sidebar_filters(df):
     """Configura os filtros da barra lateral"""
-    st.sidebar.header("🔍 Filtros")
+    st.sidebar.header("Filtros")
 
-    # Filtro por Organização
     selected_organization = st.sidebar.selectbox(
-        "Filtrar por Organização", 
-        ["Todos"] + sorted(df["Organization"].dropna().unique())
+        "Filtrar por Organização", ["Todos"] + sorted(df["Organization"].dropna().unique())
     )
 
-    # Filtro por País
     selected_country = st.sidebar.selectbox(
-        "Filtrar por País", 
-        ["Todos"] + sorted(df["Country"].dropna().unique())
+        "Filtrar por País", ["Todos"] + sorted(df["Country"].unique())  # Agora inclui "Não informado"
     )
 
-    # Filtro por Protocolo
-    protocol_list = set(", ".join(df["Protocols"].fillna("")).split(", "))
-    selected_protocol = st.sidebar.selectbox(
-        "Filtrar por Protocolo", 
-        ["Todos"] + sorted(protocol_list)
-    )
+    protocol_list = set(", ".join(df["Protocols"]).split(", "))
+    selected_protocol = st.sidebar.selectbox("Filtrar por Protocolo", ["Todos"] + sorted(protocol_list))
 
-    # Filtro por Nível de Ensino
-    grade_levels = set(df["Grade Level"].dropna().unique())
-    selected_grade = st.sidebar.selectbox(
-        "Filtrar por Nível de Ensino", 
-        ["Todos"] + sorted(grade_levels)
-    )
+    grade_levels = set(df["Grade Level"].unique())
+    selected_grade = st.sidebar.selectbox("Filtrar por Nível de Ensino", ["Todos"] + sorted(grade_levels))
 
-    # Filtro por Tipo de Relatório
-    report_types = set(df["Report Type(s)"].dropna().unique())
-    selected_report_type = st.sidebar.selectbox(
-        "Filtrar por Tipo de Relatório", 
-        ["Todos"] + sorted(report_types)
-    )
+    report_types = set(df["Report Type(s)"].unique())
+    selected_report_type = st.sidebar.selectbox("Filtrar por Tipo de Relatório", ["Todos"] + sorted(report_types))
 
-    # Filtro por Ano de Submissão
-    date_years = set([str(x).split("/")[-1] for x in df["Date Submitted"].dropna()])
-    selected_year = st.sidebar.selectbox(
-        "Filtrar por Ano", 
-        ["Todos"] + sorted(date_years)
-    )
+    date_years = set([str(x).split("/")[-1] for x in df["Date Submitted"] if x != "Não informado"])
+    selected_year = st.sidebar.selectbox("Filtrar por Ano", ["Todos"] + sorted(date_years))
 
     return selected_organization, selected_country, selected_protocol, selected_grade, selected_report_type, selected_year
 
@@ -58,7 +63,7 @@ def apply_filters(df, selected_organization, selected_country, selected_protocol
         filtered_df = filtered_df[filtered_df["Country"] == selected_country]
 
     if selected_protocol != "Todos":
-        filtered_df = filtered_df[filtered_df["Protocols"].fillna("").str.contains(selected_protocol, na=False)]
+        filtered_df = filtered_df[filtered_df["Protocols"].str.contains(selected_protocol, na=False)]
 
     if selected_grade != "Todos":
         filtered_df = filtered_df[filtered_df["Grade Level"] == selected_grade]
