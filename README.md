@@ -46,3 +46,5 @@ Os dados filtrados podem ser exportados diretamente pelo dashboard em JSON ou CS
 
 ## 📜 Licença
 Este projeto está licenciado sob a licença MIT. Sinta-se à vontade para usá-lo e modificá-lo!
+
+**Criado por [Allyson Aires pimentel da  Silva]** 🚀
