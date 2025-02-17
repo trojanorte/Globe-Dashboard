@@ -2,3 +2,6 @@ streamlit
 pandas
 numpy
 selenium
+plotly
+openpyxl
+scikit-learn
