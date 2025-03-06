@@ -3,8 +3,8 @@ import streamlit as st
 # ✅ `set_page_config()` deve ser o primeiro comando do Streamlit
 st.set_page_config(page_title="GLOBE Research Dashboard", layout="wide")
 
-import filters
-import stats
+import filters 
+import stats 
 import utils
 
 # Título da aplicação
